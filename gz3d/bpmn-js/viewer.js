@@ -80,6 +80,8 @@ const viewer = new BpmnViewer({
   }
 });
 
+const fame = viewer.get("fameConnector");
+
 function openDiagram(diagram) {
   return viewer.importXML(diagram)
     .then(({ warnings }) => {
@@ -113,16 +115,27 @@ function openFile(files) {
 }
 
 jQuery(function() {
-  $('.bts-toggle-mode').css('visibility', 'hidden')
+  document.querySelector('.bts-toggle-mode').classList.add('hidden');
   if(!($('.bjs-container').hasClass('simulation'))) {
     $('.bts-toggle-mode').trigger('click')
   }
 })
 
+document.getElementById('prova').addEventListener('click', function() {
+  //fame.animateSequenceFlow('SequenceFlow_1xib75z')
+  fame.animateTask('ParallelGateway_0s75uad')
+  setTimeout(function (){
+    fame.deanimateTask('ParallelGateway_0s75uad')
+  }, 2000);
+
+})
+
 const inputDiagram = document.getElementById('inputDiagram');
 
 inputDiagram.addEventListener('change', function() {
+  $('.bts-toggle-mode').trigger('click')
   readFile(inputDiagram.files[0])
+  $('.bts-toggle-mode').trigger('click')
 });
 
 function readFile(file) {

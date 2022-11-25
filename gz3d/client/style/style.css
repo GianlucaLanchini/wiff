@@ -137,3 +137,7 @@ body:not(.presentation-mode) .bts-notifications {
 .bio-properties-panel-container {
   width: 100%;
 }
+
+.hidden {
+  visibility: hidden;
+}
