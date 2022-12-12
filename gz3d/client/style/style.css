@@ -141,3 +141,32 @@ body:not(.presentation-mode) .bts-notifications {
 .hidden {
   visibility: hidden;
 }
+
+.bts-token-count-parent .bts-token-count {
+  text-shadow:
+		-1px -1px 0 #000,
+		1px -1px 0 #000,
+		-1px 1px 0 #000,
+		1px 1px 0 #000;
+}
+
+.bts-animation-tokens .bts-text {
+  text-shadow:
+		-1px -1px 0 #000,
+		1px -1px 0 #000,
+		-1px 1px 0 #000,
+		1px 1px 0 #000;
+}
+
+#clock-mouse {
+  right: 20vw!important;
+  width: 12em!important;
+} 
+
+#play-header-fieldset {
+  right: 37.2em!important;
+}
+
+#notification-popup {
+  right: 25vw!important;
+}

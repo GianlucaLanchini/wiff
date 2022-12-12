@@ -1,10 +1,28 @@
 import TokenSimulationModule from '../../lib/viewer';
 import BpmnViewer from 'bpmn-js/lib/NavigatedViewer';
 import fileOpen from 'file-open';
-import exampleXML from '../resources/example.bpmn';
-
+import fameSimulation from '../resources/simple_scenario.bpmn';
+import rosbridge from './rosbridge';
 
 const url = new URL(window.location.href);
+
+rosbridge.dt_listener.subscribe((message) => {
+  const json = JSON.parse(message.data.replaceAll(/'/g, '"'));
+  switch(json.type) {
+    case 'start':{
+      fame.animateTask(json.id, json.instance);
+      break;
+    } 
+    case 'stop':{
+      fame.deanimateTask(json.id)
+      break;
+    }
+    default :{
+      fame.animateSequenceFlow(json.id, json.instance);
+      break;
+    }
+  }
+});
 
 const persistent = url.searchParams.has('p');
 const active = url.searchParams.has('e');
@@ -12,60 +30,21 @@ const presentationMode = url.searchParams.has('pm');
 
 const initialDiagram = (() => {
   try {
-    return persistent && localStorage['diagram-xml'] || exampleXML;
+    return persistent && localStorage['diagram-xml'] || fameSimulation;
   } catch (err) {
-    return exampleXML;
+    return fameSimulation;
   }
 })();
 
-function hideMessage() {
-  const dropMessage = document.querySelector('.drop-message');
-
-  dropMessage.style.display = 'none';
-}
-
-function showMessage(cls, message) {
-  const messageEl = document.querySelector('.drop-message');
-
-  messageEl.textContent = message;
-  messageEl.className = `drop-message ${cls || ''}`;
-
-  messageEl.style.display = 'block';
-}
-
-if (persistent) {
-  hideMessage();
-}
-
 const ExampleModule = {
   __init__: [
-    [ 'eventBus', 'bpmnjs', 'toggleMode', function(eventBus, bpmnjs, toggleMode) {
-
-      if (persistent) {
-        eventBus.on('commandStack.changed', function() {
-          bpmnjs.saveXML().then(result => {
-            localStorage['diagram-xml'] = result.xml;
-          });
-        });
-      }
-
-      if ('history' in window) {
-        eventBus.on('tokenSimulation.toggleMode', event => {
-
-          if (event.active) {
-            url.searchParams.set('e', '1');
-          } else {
-            url.searchParams.delete('e');
-          }
-
-          history.replaceState({}, document.title, url.toString());
-        });
-      }
+    ['eventBus', 'bpmnjs', 'toggleMode', function(eventBus, bpmnjs, toggleMode) {
 
       eventBus.on('diagram.init', 500, () => {
         toggleMode.toggleMode(active);
       });
-    } ]
+
+    }]
   ]
 };
 
@@ -121,6 +100,7 @@ jQuery(function() {
   }
 })
 
+/*
 document.getElementById('prova').addEventListener('click', function() {
   //fame.animateSequenceFlow('SequenceFlow_1xib75z')
   fame.animateTask('ParallelGateway_0s75uad')
@@ -137,6 +117,7 @@ inputDiagram.addEventListener('change', function() {
   readFile(inputDiagram.files[0])
   $('.bts-toggle-mode').trigger('click')
 });
+*/
 
 function readFile(file) {
 
@@ -161,26 +142,4 @@ document.body.addEventListener('keydown', function(event) {
   }
 });
 
-const remoteDiagram = url.searchParams.get('diagram');
-
-if (remoteDiagram) {
-  fetch(remoteDiagram).then(
-    r => {
-      if (r.ok) {
-        return r.text();
-      }
-
-      throw new Error(`Status ${r.status}`);
-    }
-  ).then(
-    text => openDiagram(text)
-  ).catch(
-    err => {
-      showMessage('error', `Failed to open remote diagram: ${err.message}`);
-
-      openDiagram(initialDiagram);
-    }
-  );
-} else {
-  openDiagram(initialDiagram);
-}
+openDiagram(initialDiagram);
