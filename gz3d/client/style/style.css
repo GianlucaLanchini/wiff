@@ -169,4 +169,6 @@ body:not(.presentation-mode) .bts-notifications {
 
 #notification-popup {
   right: 25vw!important;
+  width: fit-content;
+  white-space: nowrap;
 }
