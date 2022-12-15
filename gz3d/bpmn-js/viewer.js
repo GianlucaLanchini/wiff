@@ -100,6 +100,10 @@ jQuery(function() {
   }
 })
 
+document.querySelector('.page_link a').addEventListener('click', function() {
+  window.location.assign('http://localhost:8080/modeler');
+})
+
 /*
 document.getElementById('prova').addEventListener('click', function() {
   //fame.animateSequenceFlow('SequenceFlow_1xib75z')

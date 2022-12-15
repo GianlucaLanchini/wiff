@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <title>wiff - Web Interface for FaMe</title>
+
+  <link rel="stylesheet" href="./dist/vendor/bpmn-js/assets/diagram-js.css" />
+  <link rel="stylesheet" href="./dist/vendor/bpmn-js/assets/bpmn-js.css" />
+  <link rel="stylesheet" href="./dist/vendor/bpmn-js/assets/bpmn-font/css/bpmn-embedded.css" />
+  <link rel="stylesheet" href="./dist/vendor/bpmn-js-token-simulation/assets/css/bpmn-js-token-simulation.css" />
+  <link rel="stylesheet" href="./dist/vendor/bpmn-js-properties-panel/assets/properties-panel.css" />
+  <link rel="stylesheet" href="./style/style.css" />
+
+  <script type="text/javascript" src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+
+  <link rel="stylesheet" href="style/jquery-mobile/jquery.mobile-1.4.0.css"/>
+
+
+</head>
+<body>
+  <div class="page_link">
+    <a class="link">Viewer</a>
+  </div>
+  <div class="canvas-parent">
+    <div class="canvas" id="canvas">
+    </div>
+
+    <div class="properties-panel" id="properties-panel">
+      <div class="properties-panel-resizer" id="properties-panel-resizer" title="Toggle properties panel" draggable="true">
+         <div class="properties-panel-resize-handle"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="links bottom-links">
+    <button class="link" id="download-button">Download Diagram</button>
+  </div>
+
+  <script src="./dist/modeler.js"></script>
+</body>
+</html>

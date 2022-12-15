@@ -50,8 +50,13 @@ let staticServe = function(req, res) {
 
   let fileLoc = path.resolve(staticBasePath);
 
-  if (req.url === '/')
+  if (req.url === '/') {
     req.url = '/index.html';
+  }
+  else if (req.url === '/modeler') {
+    req.url = '/modeler.html';
+  } 
+
 
   fileLoc = path.join(fileLoc, req.url);
 

@@ -1,5 +1,3 @@
-import TokenSimulationModule from '../../lib/modeler';
-
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 
 import AddExporter from '@bpmn-io/add-exporter';
@@ -15,7 +13,14 @@ import fileOpen from 'file-open';
 
 import download from 'downloadjs';
 
-import exampleXML from '../resources/example.bpmn';
+import fameSimulation from '../resources/simple_scenario.bpmn';
+
+import rosbridge from './rosbridge';
+
+rosbridge.dt_listener.subscribe((message) => {
+  console.log('ciao')
+});
+
 
 const url = new URL(window.location.href);
 
@@ -27,9 +32,9 @@ let fileName = 'diagram.bpmn';
 
 const initialDiagram = (() => {
   try {
-    return persistent && localStorage['diagram-xml'] || exampleXML;
+    return persistent && localStorage['diagram-xml'] || fameSimulation;
   } catch (err) {
-    return exampleXML;
+    return fameSimulation;
   }
 })();
 
@@ -54,7 +59,7 @@ if (persistent) {
 
 const ExampleModule = {
   __init__: [
-    [ 'eventBus', 'bpmnjs', 'toggleMode', function(eventBus, bpmnjs, toggleMode) {
+    [ 'eventBus', 'bpmnjs', function(eventBus, bpmnjs) {
 
       if (persistent) {
         eventBus.on('commandStack.changed', function() {
@@ -64,24 +69,6 @@ const ExampleModule = {
         });
       }
 
-      if ('history' in window) {
-        eventBus.on('tokenSimulation.toggleMode', event => {
-
-          document.body.classList.toggle('token-simulation-active', event.active);
-
-          if (event.active) {
-            url.searchParams.set('e', '1');
-          } else {
-            url.searchParams.delete('e');
-          }
-
-          history.replaceState({}, document.title, url.toString());
-        });
-      }
-
-      eventBus.on('diagram.init', 500, () => {
-        toggleMode.toggleMode(active);
-      });
     } ]
   ]
 };
@@ -91,7 +78,6 @@ const modeler = new BpmnModeler({
   additionalModules: [
     BpmnPropertiesPanelModule,
     BpmnPropertiesProviderModule,
-    TokenSimulationModule,
     AddExporter,
     ExampleModule
   ],
@@ -143,6 +129,10 @@ function openFile(files) {
 
   openDiagram(files[0].contents);
 }
+
+document.querySelector('.page_link a').addEventListener('click', function() {
+  window.location.assign('http://localhost:8080');
+})
 
 document.body.addEventListener('dragover', fileDrop('Open BPMN diagram', openFile), false);
 
@@ -222,28 +212,4 @@ propertiesPanelResizer.addEventListener('drag', function(event) {
   toggleProperties(open);
 });
 
-const remoteDiagram = url.searchParams.get('diagram');
-
-if (remoteDiagram) {
-  fetch(remoteDiagram).then(
-    r => {
-      if (r.ok) {
-        return r.text();
-      }
-
-      throw new Error(`Status ${r.status}`);
-    }
-  ).then(
-    text => openDiagram(text)
-  ).catch(
-    err => {
-      showMessage('error', `Failed to open remote diagram: ${err.message}`);
-
-      openDiagram(initialDiagram);
-    }
-  );
-} else {
-  openDiagram(initialDiagram);
-}
-
-toggleProperties(url.searchParams.has('pp'));
+openDiagram(initialDiagram);

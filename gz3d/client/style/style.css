@@ -172,3 +172,14 @@ body:not(.presentation-mode) .bts-notifications {
   width: fit-content;
   white-space: nowrap;
 }
+
+.page_link {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  z-index: 100;
+} 
+
+.page_link a:hover {
+  cursor: pointer;
+}
