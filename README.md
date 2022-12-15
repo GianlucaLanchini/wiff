@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./assets/wiff-logo.png">
+</p>
+
 # wiff - Web Interface for FaMe
 
 Web application built combining technologies from both gzweb (https://github.com/osrf/gzweb), for the 3d visualization of the running fame simulation, and bpmn-js-token-simulation (https://github.com/bpmn-io/bpmn-js-token-simulation), for the visualization of the BPMN diagram and of its running tokens.
