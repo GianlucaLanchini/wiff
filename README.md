@@ -1,5 +1,5 @@
-<p align="left">
-  <img src="./assets/wiff-logo.png" max-width="35%" />
+<p align="left" style="max-width: 35%;">
+  <img src="./assets/wiff-logo.png">
 </p>
 
 # wiff - Web Interface for FaMe
