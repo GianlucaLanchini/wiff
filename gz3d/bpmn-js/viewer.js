@@ -6,23 +6,7 @@ import rosbridge from './rosbridge';
 
 const url = new URL(window.location.href);
 
-rosbridge.dt_listener.subscribe((message) => {
-  const json = JSON.parse(message.data.replaceAll(/'/g, '"'));
-  switch(json.type) {
-    case 'start':{
-      fame.animateTask(json.id, json.instance);
-      break;
-    } 
-    case 'stop':{
-      fame.deanimateTask(json.id)
-      break;
-    }
-    default :{
-      fame.animateSequenceFlow(json.id, json.instance);
-      break;
-    }
-  }
-});
+let dt_listener;
 
 const persistent = url.searchParams.has('p');
 const active = url.searchParams.has('e');
@@ -94,10 +78,32 @@ function openFile(files) {
 }
 
 jQuery(function() {
+
   document.querySelector('.bts-toggle-mode').classList.add('hidden');
   if(!($('.bjs-container').hasClass('simulation'))) {
     $('.bts-toggle-mode').trigger('click')
   }
+
+  dt_listener = rosbridge.openRosConnection();
+
+  dt_listener.subscribe((message) => {
+    const json = JSON.parse(message.data);
+    switch(json.type) {
+      case 'start':{
+        fame.animateTask(json.id, json.instance);
+        break;
+      } 
+      case 'stop':{
+        fame.deanimateTask(json.id)
+        break;
+      }
+      default :{
+        fame.animateSequenceFlow(json.id, json.instance);
+        break;
+      }
+    }
+  });
+
 })
 
 /*
