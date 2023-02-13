@@ -7,17 +7,22 @@
   "scripts": {
     "test": "./node_modules/.bin/eslint gz3d/src/*.js gz3d/test/*.js gzbridge/server.js && ./node_modules/karma/bin/karma start --singleRun",
     "update": "./node_modules/.bin/grunt build && cd build && cmake ..",
-    "start": "if [ $npm_config_port ]; then port=$npm_config_port; fi; cd gzbridge && ./server.js $port",
+    "start": "cd gzbridge && node ./server.js",
     "deploy": "./deploy.sh",
     "bundle": "webpack --mode production",
     "build": "npm run deploy --- && npm run bundle"
   },
   "dependencies": {
-    "fs": "0.0.1-security",
+    "body-parser": "^1.20.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "fs": "^0.0.1-security",
     "http": "0.0.0",
     "jquery": "^3.6.1",
     "min-dash": "^4.0.0",
     "min-dom": "^4.0.3",
+    "mysql2": "^3.1.0",
     "nan": "^2.14.2",
     "node-gyp": "6.1.0",
     "path": "^0.12.7",
@@ -79,4 +84,3 @@
     "webpack-dev-server": "^4.11.1"
   }
 }
-

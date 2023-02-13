@@ -27,7 +27,7 @@ using namespace gzweb;
 /////////////////////////////////////////////////
 GZNode::GZNode()
 {
-  if (!gazebo::transport::init()) {
+  if (!gazebo::transport::init("", 0, 1)) {
     return;
   }
 
