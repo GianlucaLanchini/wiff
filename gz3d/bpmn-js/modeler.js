@@ -23,6 +23,23 @@ const persistent = url.searchParams.has('p');
 const active = url.searchParams.has('e');
 const presentationMode = url.searchParams.has('pm');
 
+const backURL = 'http://localhost:3000'
+const diagrams = [];
+
+/*
+jQuery(function() {
+  $.ajax({
+    url: backURL + '/diagrams',
+    type: "GET",
+      success: function(response, status, http) {
+        if (response) {
+            console.log(response)
+        }
+      }
+  });
+})
+*/
+
 let fileName = 'diagram.bpmn';
 
 const initialDiagram = (() => {
@@ -121,18 +138,63 @@ function openFile(files) {
 
   fileName = files[0].name;
 
+  $('#diagramName').val(fileName.substring(0, fileName.length - 5));
+
   openDiagram(files[0].contents);
 }
 
 document.body.addEventListener('dragover', fileDrop('Open BPMN diagram', openFile), false);
 
-function downloadDiagram() {
-  modeler.saveXML({ format: true }, function(err, xml) {
-    if (!err) {
-      download(xml, fileName, 'application/xml');
-    }
-  });
+async function downloadDiagram() {
+  try {
+    const result = await modeler.saveXML({ format: true });
+    const { xml } = result;
+    download(xml, fileName, 'application/xml');
+  } catch (err) {
+    console.log(err);
+  }
 }
+
+$('#upload-button').on('click', function() {
+  $( "#upload-form" ).dialog();
+});
+
+$('#diagram-submit').on('click', async function() {
+  if($('#diagramName').val().trim() !== "") {
+    var diagramName = $('#diagramName').val().trim();
+    var isCall = 1;
+    if($('#isCallActivity').val() == "no") {
+      isCall = 0;
+    }
+    try {
+      const result = await modeler.saveXML({ format: true });
+      const { xml } = result;
+      var data = {
+        name_diagram: diagramName,
+        content_diagram: xml,
+        is_call_activity: isCall
+      };
+      $.ajax({
+        type: 'post',
+        url: backURL + '/diagrams',
+        data: JSON.stringify(data),
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+          alert(data.message);
+          console.log(data);
+          $( "#upload-form" ).dialog('close');
+        },  
+        error: function () {
+          alert('Error during Upload')
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
+    alert('Please insert a valid name for the diagram!')
+  }
+});
 
 document.body.addEventListener('keydown', function(event) {
   if (event.code === 'KeyS' && (event.metaKey || event.ctrlKey)) {
@@ -151,7 +213,6 @@ document.body.addEventListener('keydown', function(event) {
 document.querySelector('#download-button').addEventListener('click', function(event) {
   downloadDiagram();
 });
-
 
 const propertiesPanel = document.querySelector('#properties-panel');
 

@@ -10,11 +10,12 @@
   <link rel="stylesheet" href="./dist/vendor/bpmn-js-token-simulation/assets/css/bpmn-js-token-simulation.css" />
   <link rel="stylesheet" href="./dist/vendor/bpmn-js-properties-panel/assets/properties-panel.css" />
   <link rel="stylesheet" href="./style/style.css" />
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
   <script type="text/javascript" src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
 
-  <link rel="stylesheet" href="style/jquery-mobile/jquery.mobile-1.4.0.css"/>
-
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
 </head>
 <body>
@@ -31,6 +32,20 @@
 
   <div class="links bottom-links">
     <button class="link" id="download-button">Download Diagram</button>
+    <button class="link" id="upload-button">Upload Diagram</button>
+  </div>
+
+  <div id="upload-form" title="Upload the diagram to the Database">
+    <label for="diagramName">Diagram Name: </label>
+    <input type="text" name="diagramName" id="diagramName" class="text" value="diagram">
+    <br><br>
+    <label for="isCallActivity">Can the diagram be used as a Call Activity? </label>
+    <select name="isCallActivity" id="isCallActivity">
+      <option value="yes">Yes</option>
+      <option value="no" selected="selected">No</option>
+    </select>
+    <br><br><br>
+    <button id="diagram-submit">Submit</button>
   </div>
 
   <script src="./dist/modeler.js"></script>

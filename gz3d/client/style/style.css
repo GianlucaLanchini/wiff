@@ -172,3 +172,7 @@ body:not(.presentation-mode) .bts-notifications {
   width: fit-content;
   white-space: nowrap;
 }
+
+.ui-dialog {
+  min-width: 400px!important;
+}

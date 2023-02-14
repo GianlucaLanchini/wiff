@@ -32,12 +32,6 @@ const port = 8080;
 let connections = [];
 
 /**
- * Holds the message containing all material scripts in case there is no
- * gzserver connected
- */
-let materialScriptsMessage = {};
-
-/**
  * Whether currently connected to a gzserver
  */
 let isConnected = false;
