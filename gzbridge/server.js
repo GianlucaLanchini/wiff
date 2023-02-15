@@ -10,10 +10,12 @@ const fs = require('fs');
 const path = require('path');
 const gzbridge = require('./build/Debug/gzbridge');
 const diagram = require('./express/diagram');
+const instance = require('./express/instance');
 
 const app = express();
 app.use(cors());
 app.use('/', diagram);
+app.use('/', instance);
 
 /**
  * Path from where the static site is served
@@ -58,6 +60,10 @@ let staticServe = function(req, res) {
   if (req.url === '/viewer') {
     currentPage = 'viewer';
     req.url = '/index.html';
+  }
+  else if (req.url === '/instances') {
+    currentPage = 'instances';
+    req.url = '/instances.html';
   }
   else if (req.url === '/') {
     currentPage = 'modeler';

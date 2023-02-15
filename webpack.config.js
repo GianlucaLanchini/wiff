@@ -14,7 +14,8 @@ module.exports = (env, argv) => {
     mode,
     entry: {
       viewer: './gz3d/bpmn-js/viewer.js',
-      modeler: './gz3d/bpmn-js/modeler.js'
+      modeler: './gz3d/bpmn-js/modeler.js',
+      instances: './gz3d/bpmn-js/instances.js'
     },
     output: {
       filename: 'dist/[name].js',

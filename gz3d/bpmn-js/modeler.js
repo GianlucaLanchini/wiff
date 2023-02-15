@@ -23,7 +23,8 @@ const persistent = url.searchParams.has('p');
 const active = url.searchParams.has('e');
 const presentationMode = url.searchParams.has('pm');
 
-const backURL = 'http://localhost:3000'
+const backURL = 'http://localhost:3000';
+const frontURL = 'http://localhost:8080';
 const diagrams = [];
 
 /*
@@ -154,6 +155,23 @@ async function downloadDiagram() {
     console.log(err);
   }
 }
+
+$('#navigation').on({
+  mouseenter: function () {
+    $('#navigation').addClass('navigationTransition');
+  },
+  mouseleave: function () {
+    $('#navigation').removeClass('navigationTransition');
+  }
+});
+
+$('#modelerButton').on('click', function(){
+  window.location.assign(frontURL);
+})
+
+$('#InstanceButton').on('click', function(){
+  window.location.assign(frontURL + '/instances');
+})
 
 $('#upload-button').on('click', function() {
   $( "#upload-form" ).dialog();
