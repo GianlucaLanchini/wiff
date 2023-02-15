@@ -2,12 +2,9 @@
 
 
 body {
-background: #DFC2F2;
-	background-image: linear-gradient( to right, #ffffb3,#ffe6e6);
-	background-attachment: fixed;	
-	background-size: cover;
+    background: #D6D6D6;
     margin: 0;
-	}
+}
 
 .container{
 	box-shadow: 0 15px 30px 1px grey;
