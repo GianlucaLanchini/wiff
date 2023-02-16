@@ -14,11 +14,29 @@ jQuery(function() {
         success: function(response, status, http) {
           if (response) {
             instances = response.data;
-            console.log(instances);
             instances.forEach(e => {
                 createInstance(e)
             });
           }
+          $('.inspectbtn').on('click', function(){
+            var index = $(this).parent().data('index');
+            instances.forEach(e => {
+              if(e.id_instance == index) {
+                $.ajax({
+                  url: backURL + '/diagrams/' + e.diagram_instance,
+                  type: "GET",
+                    success: function(response, status, http) {
+                      if (response) {
+                        var diagram = response.data[0].content_diagram;
+                        var url = new URL(frontURL + '/viewer');
+                        localStorage.setItem('diagram-xml', diagram);
+                        window.location.assign(url);
+                      }
+                    }
+                });
+              }
+            })
+          });
         }
     });
 })
@@ -49,4 +67,4 @@ $('#modelerButton').on('click', function(){
 $('#InstanceButton').on('click', function(){
     window.location.assign(frontURL + '/instances');
 });
-  
+

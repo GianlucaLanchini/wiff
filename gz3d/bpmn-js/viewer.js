@@ -14,7 +14,7 @@ const presentationMode = url.searchParams.has('pm');
 
 const initialDiagram = (() => {
   try {
-    return persistent && localStorage['diagram-xml'] || fameSimulation;
+    return localStorage['diagram-xml'] || fameSimulation;
   } catch (err) {
     return fameSimulation;
   }
