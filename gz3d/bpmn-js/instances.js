@@ -17,6 +17,9 @@ jQuery(function() {
             instances.forEach(e => {
                 createInstance(e)
             });
+            if(instances.length == 0) {
+              createEmptyInstance();
+            }
           }
           $('.inspectbtn').on('click', function(){
             var index = $(this).parent().data('index');
@@ -49,6 +52,15 @@ function createInstance(instance) {
         </div>
     `);
     document.getElementById('box').appendChild(child);
+}
+
+function createEmptyInstance() {
+  var child = domify(`
+      <div class="container">
+          <p class="information">There are no active Instances</p>
+      </div>
+  `);
+  document.getElementById('box').appendChild(child);
 }
 
 $('#navigation').on({
