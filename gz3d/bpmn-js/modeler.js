@@ -140,6 +140,7 @@ function openFile(files) {
   fileName = files[0].name;
 
   $('#diagramName').val(fileName.substring(0, fileName.length - 5));
+  $('#instanceName').val(fileName.substring(0, fileName.length - 5));
 
   openDiagram(files[0].contents);
 }
@@ -174,11 +175,47 @@ $('#InstanceButton').on('click', function(){
 })
 
 $('#upload-button').on('click', function() {
-  $( "#upload-form" ).dialog();
+  $('#diagramName').val(fileName.substring(0, fileName.length - 5));
+  $("#isCallActivity option[value='no']").prop('selected', true);
+  $('#instanceCheck').prop('checked', false);
+  if(!$('#instanceSection').hasClass('hidden')) {
+    $('#instanceSection').addClass('hidden');
+  }
+  $('#instanceName').val($('#diagramName').val());
+  $('#instanceAddress').val('');
+  $('#upload-form').dialog();
 });
 
+jQuery(function() {
+  if(!$('#instanceCheck').is(':checked')) {
+    $('#instanceSection').addClass('hidden');
+  } else {
+    $('#instanceSection').removeClass('hidden');
+  }
+})
+
+$('#instanceCheck').on('click', function() {
+  if(!$('#instanceCheck').is(':checked')) {
+    $('#instanceSection').addClass('hidden');
+  } else {
+    $('#instanceSection').removeClass('hidden');
+  }
+})
+
 $('#diagram-submit').on('click', async function() {
+  var emptyCheck = false;
+  var instanceCheck = false;
   if($('#diagramName').val().trim() !== "") {
+    if($('#instanceCheck').is(':checked')) {
+      if($('#instanceName').val().trim() !== "" && $('#instanceAddress').val().trim() !== "") {
+        emptyCheck = true;
+        instanceCheck = true;
+      }
+    } else {
+      emptyCheck = true;
+    }
+  }
+  if(emptyCheck) {
     var diagramName = $('#diagramName').val().trim();
     var isCall = 1;
     if($('#isCallActivity').val() == "no") {
@@ -197,22 +234,67 @@ $('#diagram-submit').on('click', async function() {
         url: backURL + '/diagrams',
         data: JSON.stringify(data),
         contentType: "application/json; charset=utf-8",
-        success: function (data) {
-          alert(data.message);
-          console.log(data);
-          $( "#upload-form" ).dialog('close');
+        success: function(res) {
+          if(instanceCheck) {
+            launchInstance(res.data.insertId);
+          } else {
+            alert(res.message);
+            $( "#upload-form" ).dialog('close');
+          }
         },  
         error: function () {
-          alert('Error during Upload')
+          alert('Error during the upload of the diagram');
         }
       });
-    } catch (err) {
-      console.log(err);
+    } catch(err) {
+      alert('Error during the upload of the diagram');
     }
   } else {
-    alert('Please insert a valid name for the diagram!')
+    alert('Please do not leave any field empty');
   }
 });
+
+function launchInstance(instanceDiagram) {
+  var instanceName = $('#instanceName').val().trim();
+  var address = $('#instanceAddress').val().trim();
+  try {
+    let ros = new ROSLIB.Ros({ url: address });
+    ros.on("connection", () => {
+      console.log('connesso')
+      let dt_topic = new ROSLIB.Topic({
+        ros,
+        name: "/fame_dt",
+        messageType: "std_msgs/String",
+      });
+      var msg = new ROSLIB.Message({
+        data: 'mockup' //da aggiungere
+      });
+      dt_topic.publish(msg);
+      var instanceData = {
+        name_instance: instanceName,
+        address_instance: address,
+        diagram_instance: instanceDiagram
+      };
+      $.ajax({
+        type: 'post',
+        url: backURL + '/instances',
+        data: JSON.stringify(instanceData),
+        contentType: "application/json; charset=utf-8",
+        success: function(res) {
+          window.location.assign(frontURL + '/instances');
+        },
+        error: function () {
+          alert('Error during the upload of the instance');
+        }
+      });
+    });
+    ros.on("error", () => {
+      alert('Error during the connection to rosbridge');
+    });
+  } catch(error) {
+    alert('Error during the connection to rosbridge');
+  }
+}
 
 document.body.addEventListener('keydown', function(event) {
   if (event.code === 'KeyS' && (event.metaKey || event.ctrlKey)) {

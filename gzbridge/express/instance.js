@@ -45,4 +45,21 @@ app.get('/instances/:id', (req,res)=>{
     });
 })
 
+app.post('/instances', (req,res) => {
+    let instanceName = req.body.name_instance;
+    let instanceAddress = req.body.address_instance;
+    let instanceDiagram = req.body.diagram_instance;
+    db.query('insert into instances(name_instance, address_instance, diagram_instance) values(?,?,?)', [instanceName, instanceAddress, instanceDiagram], (err, result) => {
+        if(err){
+            console.log('Error');
+        }
+        if(result){
+            res.send({
+                message: "Added instance",
+                data: result
+            })
+        } 
+    }) 
+})
+
 module.exports = app;

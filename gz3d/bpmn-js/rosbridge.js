@@ -1,6 +1,6 @@
-function openRosConnection() {
+function openRosConnection(address) {
 
-  const ros = new ROSLIB.Ros({ url: prompt('Insert FaMe Address') });
+  const ros = new ROSLIB.Ros({ url: address });
 
   //const ros = new ROSLIB.Ros({ url: "ws://localhost:9090" });
 
@@ -16,13 +16,13 @@ function openRosConnection() {
     console.log('chiusura')
   });
 
-  const dt_listener = new ROSLIB.Topic({
+  const dt_topic = new ROSLIB.Topic({
     ros,
     name: "/fame_dt",
     messageType: "std_msgs/String",
   }); 
 
-  return dt_listener;
+  return dt_topic;
 
 }
 

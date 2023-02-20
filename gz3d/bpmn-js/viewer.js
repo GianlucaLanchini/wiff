@@ -8,6 +8,9 @@ const url = new URL(window.location.href);
 
 let dt_listener;
 
+const backURL = 'http://localhost:3000';
+const frontURL = 'http://localhost:8080';
+
 const persistent = url.searchParams.has('p');
 const active = url.searchParams.has('e');
 const presentationMode = url.searchParams.has('pm');
@@ -84,24 +87,36 @@ jQuery(function() {
     $('.bts-toggle-mode').trigger('click')
   }
 
-  dt_listener = rosbridge.openRosConnection();
+  var rosAddress = '';
 
-  dt_listener.subscribe((message) => {
-    const json = JSON.parse(message.data);
-    switch(json.type) {
-      case 'start':{
-        fame.animateTask(json.id, json.instance);
-        break;
-      } 
-      case 'stop':{
-        fame.deanimateTask(json.id)
-        break;
+  $.ajax({
+    url: backURL + '/instances/' + localStorage['instance-id'],
+    type: "GET",
+      success: function(response, status, http) {
+        if (response) {
+          if(response.data[0].address_instance) {
+            rosAddress = response.data[0].address_instance;
+          }
+          dt_listener = rosbridge.openRosConnection(rosAddress);
+          dt_listener.subscribe((message) => {
+            const json = JSON.parse(message.data);
+            switch(json.type) {
+              case 'start':{
+                fame.animateTask(json.id, json.instance);
+                break;
+              } 
+              case 'stop':{
+                fame.deanimateTask(json.id)
+                break;
+              }
+              default :{
+                fame.animateSequenceFlow(json.id, json.instance);
+                break;
+              }
+            }
+          });
+        }
       }
-      default :{
-        fame.animateSequenceFlow(json.id, json.instance);
-        break;
-      }
-    }
   });
 
 })

@@ -33,6 +33,7 @@ jQuery(function() {
                         var diagram = response.data[0].content_diagram;
                         var url = new URL(frontURL + '/viewer');
                         localStorage.setItem('diagram-xml', diagram);
+                        localStorage.setItem('instance-id', e.id_instance);
                         window.location.assign(url);
                       }
                     }
