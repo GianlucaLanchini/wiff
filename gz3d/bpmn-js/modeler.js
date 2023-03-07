@@ -4,8 +4,14 @@ import AddExporter from '@bpmn-io/add-exporter';
 
 import {
   BpmnPropertiesPanelModule,
-  BpmnPropertiesProviderModule
+  BpmnPropertiesProviderModule,
+  CamundaPlatformPropertiesProviderModule
 } from 'bpmn-js-properties-panel';
+
+import calledElementProviderModule from './providers/calledElement';
+import callModdleDescriptor from './descriptors/callActivity';
+
+import CamundaBpmnModdle from 'camunda-bpmn-moddle/resources/camunda.json'
 
 import fileDrop from 'file-drops';
 
@@ -90,11 +96,17 @@ const modeler = new BpmnModeler({
   additionalModules: [
     BpmnPropertiesPanelModule,
     BpmnPropertiesProviderModule,
+    CamundaPlatformPropertiesProviderModule,
+    calledElementProviderModule,
     AddExporter,
     ExampleModule
   ],
   propertiesPanel: {
     parent: '#properties-panel'
+  },
+  moddleExtensions: {
+    camunda: CamundaBpmnModdle,
+    callActivity: callModdleDescriptor
   },
   exporter: {
     name: 'bpmn-js-token-simulation',

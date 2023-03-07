@@ -26,6 +26,21 @@ module.exports = (env, argv) => {
         {
           test: /\.bpmn$/,
           type: 'asset/source'
+        },
+        {
+          test: /\.m?js$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              plugins: [
+                [ '@babel/plugin-transform-react-jsx', {
+                  'importSource': '@bpmn-io/properties-panel/preact',
+                  'runtime': 'automatic'
+                } ]
+              ]
+            }
+          }
         }
       ]
     },

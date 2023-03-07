@@ -208,3 +208,7 @@ body:not(.presentation-mode) .bts-notifications {
   transform: translate(0px, 60px);
   transition: 0.3s;
 }
+
+.bio-properties-panel-entry[data-entry-id="scriptValue"] .bio-properties-panel-input[name="scriptValue"] {
+  min-height: 100px;
+}

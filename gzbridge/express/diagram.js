@@ -45,6 +45,23 @@ app.get('/diagrams/:id', (req,res)=>{
     });
 })
 
+app.get('/callActivities', (req,res)=>{
+    db.query('select * from diagrams where is_call_activity = 1', (err,result) => {
+        if(err){
+            console.log('Error');
+        }
+        if(result){
+            res.send({
+                data: result
+            })
+        } else {
+            res.send({
+                message: "No data found" 
+            }) 
+        }
+    });
+})
+
 app.post('/diagrams', (req,res) => {
     let diagramName = req.body.name_diagram;
     let diagramContent = req.body.content_diagram;

@@ -1,0 +1,23 @@
+{
+  "name": "callElement",
+  "prefix": "CallActivity",
+  "xml": {
+    "tagAlias": "lowerCase"
+  },
+  "associations": [],
+  "types": [
+    {
+      "name": "callElement",
+      "extends": [
+        "bpmn:CallActivity"
+      ],
+      "properties": [
+        {
+          "name": "callElement",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    }
+  ]
+}

@@ -1,11 +1,7 @@
 {
   "name": "wiff",
   "version": "1.0.0",
-  "config": {
-    "port": ""
-  },
   "scripts": {
-    "test": "./node_modules/.bin/eslint gz3d/src/*.js gz3d/test/*.js gzbridge/server.js && ./node_modules/karma/bin/karma start --singleRun",
     "update": "./node_modules/.bin/grunt build && cd build && cmake ..",
     "start": "cd gzbridge && node ./server.js",
     "deploy": "./deploy.sh",
@@ -14,6 +10,7 @@
   },
   "dependencies": {
     "body-parser": "^1.20.1",
+    "camunda-bpmn-moddle": "^7.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
@@ -32,7 +29,9 @@
   "devDependencies": {
     "@bpmn-io/add-exporter": "^0.2.0",
     "@bpmn-io/properties-panel": "^0.23.0",
-    "babel-loader": "^8.2.5",
+    "@babel/core": "^7.16.5",
+    "@babel/plugin-transform-react-jsx": "^7.16.5",
+    "babel-loader": "^8.3.0",
     "babel-plugin-istanbul": "^6.1.1",
     "bpmn-js": "^10.2.0",
     "bpmn-js-properties-panel": "^1.9.0",

@@ -23,13 +23,13 @@ app.use('/', instance);
 const staticBasePath = './../http/client';
 
 /**
- * Port to serve from, defaults to 8080
+ * Port to serve from
  */
 const port = 8080;
 
 /**
- * Array of websocket connections currently active, if it is empty, there are no
- * clients connected.
+ * Array of websocket connections (counting only if gzserver is active) currently active,
+ * if it is empty, there are no clients connected.
  */
 let connections = [];
 
@@ -65,7 +65,7 @@ let staticServe = function(req, res) {
     currentPage = 'instances';
     req.url = '/instances.html';
   }
-  else if (req.url === '/') {
+  else if (req.url === '/' || req.url === '/?pp=1') {
     currentPage = 'modeler';
     req.url = '/modeler.html';
   } 
@@ -110,6 +110,8 @@ let wsServer = new WebSocketServer({
 
 wsServer.on('request', function(request) {
 
+  gzNode = undefined;
+
   isConnected = false;
 
   // Accept request
@@ -119,79 +121,79 @@ wsServer.on('request', function(request) {
     
     gzNode = new gzbridge.GZNode();
 
-  if (gzNode.getIsGzServerConnected())
-{
-gzNode.loadMaterialScripts(staticBasePath + '/assets');
-gzNode.setPoseMsgFilterMinimumAge(0.02);
-gzNode.setPoseMsgFilterMinimumDistanceSquared(0.00001);
-gzNode.setPoseMsgFilterMinimumQuaternionSquared(0.00001);
+    if (gzNode.getIsGzServerConnected()) {
 
-console.log('--------------------------------------------------------------');
-console.log('Gazebo transport node connected to gzserver.');
-console.log('Pose message filter parameters between successive messages: ');
-console.log('  minimum seconds: ' +
-gzNode.getPoseMsgFilterMinimumAge());
-console.log('  minimum XYZ distance squared: ' +
-gzNode.getPoseMsgFilterMinimumDistanceSquared());
-console.log('  minimum Quartenion distance squared:'
-+ ' ' + gzNode.getPoseMsgFilterMinimumQuaternionSquared());
-console.log('--------------------------------------------------------------');
-isConnected = true;
-gzNode.setConnected(isConnected);
-} else return;
+      gzNode.loadMaterialScripts(staticBasePath + '/assets');
+      gzNode.setPoseMsgFilterMinimumAge(0.02);
+      gzNode.setPoseMsgFilterMinimumDistanceSquared(0.00001);
+      gzNode.setPoseMsgFilterMinimumQuaternionSquared(0.00001);
 
-  /*
-  // If gzserver is not connected just send material scripts and status
-  if (!gzNode.getIsGzServerConnected())
-  {
-    // create error status and send it
-    let statusMessage =
-        '{"op":"publish","topic":"~/status","msg":{"status":"error"}}';
-    connection.sendUTF(statusMessage);
-    // send material scripts message
-    connection.sendUTF(materialScriptsMessage);
-    return;
-  }
-  */
+      console.log('--------------------------------------------------------------');
+      console.log('Gazebo transport node connected to gzserver.');
+      console.log('Pose message filter parameters between successive messages: ');
+      console.log('  minimum seconds: ' +
+      gzNode.getPoseMsgFilterMinimumAge());
+      console.log('  minimum XYZ distance squared: ' +
+      gzNode.getPoseMsgFilterMinimumDistanceSquared());
+      console.log('  minimum Quartenion distance squared:'
+      + ' ' + gzNode.getPoseMsgFilterMinimumQuaternionSquared());
+      console.log('--------------------------------------------------------------');
 
-  connections.push(connection);
-
-  console.log(new Date() + ' New connection accepted from: ' + request.origin +
-      ' ' + connection.remoteAddress);
-
-  // Handle messages received from client
-  connection.on('message', function(message) {
-    if (message.type === 'utf8') {
-      console.log(new Date() + ' Received Message: ' + message.utf8Data +
-          ' from ' + request.origin + ' ' + connection.remoteAddress);
-      if(typeof gzNode !== 'undefined') {
-        gzNode.request(message.utf8Data);
-      }
-    }
-    else if (message.type === 'binary') {
-      console.log(new Date() + ' Received Binary Message of ' +
-          message.binaryData.length + ' bytes from ' + request.origin + ' ' +
-          connection.remoteAddress);
-      connection.sendBytes(message.binaryData);
-    }
-  });
-
-  // Handle client disconnection
-  connection.on('close', function(reasonCode, description) {
-    console.log(new Date() + ' Peer ' + request.origin + ' ' +
-        connection.remoteAddress + ' disconnected.');
-
-    // remove connection from array
-    let conIndex = connections.indexOf(connection);
-    connections.splice(conIndex, 1);
-    console.log('\n\n\n\n\n Chiusura Connessione \n\n\n\n\n\n\n')
-    isConnected = false;
-    if(typeof gzNode !== 'undefined') {
+      connections.push(connection);
+      isConnected = true;
       gzNode.setConnected(isConnected);
-    }
-  });
-  }
 
+      console.log(new Date() + ' New connection accepted from: ' + request.origin +
+          ' ' + connection.remoteAddress);
+
+      } else return;
+
+    /*
+    // If gzserver is not connected just send material scripts and status
+    if (!gzNode.getIsGzServerConnected())
+    {
+      // create error status and send it
+      let statusMessage =
+          '{"op":"publish","topic":"~/status","msg":{"status":"error"}}';
+      connection.sendUTF(statusMessage);
+      // send material scripts message
+      connection.sendUTF(materialScriptsMessage);
+      return;
+    }
+    */
+
+    // Handle messages received from client
+    connection.on('message', function(message) {
+      if(typeof gzNode !== 'undefined') {
+        if (message.type === 'utf8') {
+          console.log(new Date() + ' Received Message: ' + message.utf8Data +
+              ' from ' + request.origin + ' ' + connection.remoteAddress);
+          gzNode.request(message.utf8Data);
+        }
+        else if (message.type === 'binary') {
+          console.log(new Date() + ' Received Binary Message of ' +
+              message.binaryData.length + ' bytes from ' + request.origin + ' ' +
+              connection.remoteAddress);
+          connection.sendBytes(message.binaryData);
+        }
+      }
+    });
+
+    // Handle client disconnection
+    connection.on('close', function(reasonCode, description) {
+      if(typeof gzNode !== 'undefined') {
+        console.log(new Date() + ' Peer ' + request.origin + ' ' +
+            connection.remoteAddress + ' disconnected.');
+
+        // remove connection from array
+        let conIndex = connections.indexOf(connection);
+        connections.splice(conIndex, 1);
+        console.log('\n\n\n\n\n Chiusura Connessione \n\n\n\n\n\n\n')
+        isConnected = false;
+        gzNode.setConnected(isConnected);
+      }
+    });
+  }
 });
 
 // If not connected, periodically send messages
