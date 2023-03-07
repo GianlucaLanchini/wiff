@@ -117,6 +117,8 @@ const modeler = new BpmnModeler({
   }
 });
 
+const elementRegistry = modeler.get('elementRegistry');
+
 function openDiagram(diagram) {
   return modeler.importXML(diagram)
     .then(({ warnings }) => {
@@ -161,9 +163,11 @@ document.body.addEventListener('dragover', fileDrop('Open BPMN diagram', openFil
 
 async function downloadDiagram() {
   try {
+    scriptControl();
     const result = await modeler.saveXML({ format: true });
     const { xml } = result;
     download(xml, fileName, 'application/xml');
+    reinstateOldScripts();
   } catch (err) {
     console.log(err);
   }
@@ -234,6 +238,7 @@ $('#diagram-submit').on('click', async function() {
       isCall = 0;
     }
     try {
+      scriptControl();
       const result = await modeler.saveXML({ format: true });
       const { xml } = result;
       var data = {
@@ -253,6 +258,7 @@ $('#diagram-submit').on('click', async function() {
             alert(res.message);
             $( "#upload-form" ).dialog('close');
           }
+          reinstateOldScripts();
         },  
         error: function () {
           alert('Error during the upload of the diagram');
@@ -306,6 +312,24 @@ function launchInstance(instanceDiagram) {
   } catch(error) {
     alert('Error during the connection to rosbridge');
   }
+}
+
+function scriptControl() {
+  elementRegistry.forEach(function(element) {
+    if(element.type && element.type == 'bpmn:ScriptTask' && element.businessObject.scriptFormat == 'JavaScript' && element.businessObject.script !== undefined) {
+      const oldScript = element.businessObject.script;
+      element.businessObject.script = oldScript + '\nnext();';
+    }
+  })
+} 
+
+function reinstateOldScripts() {
+  elementRegistry.forEach(function(element) {
+    if(element.type && element.type == 'bpmn:ScriptTask' && element.businessObject.scriptFormat == 'JavaScript' && element.businessObject.script !== undefined) {
+      const oldScript = element.businessObject.script;
+      element.businessObject.script = oldScript.slice(0, -8);
+    }
+  })
 }
 
 document.body.addEventListener('keydown', function(event) {

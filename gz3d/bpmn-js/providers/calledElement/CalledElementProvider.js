@@ -50,6 +50,28 @@ export default function CalledElementProvider(propertiesPanel, translate) {
         
       }
 
+      if(is(element, 'bpmn:ScriptTask')) {
+
+        const scriptTab = groups.find((e) => e.id === "CamundaPlatform__Script");
+
+        const entries = scriptTab.entries;
+
+        if(element.businessObject.scriptFormat == undefined || element.businessObject.scriptFormat == '') {
+          element.businessObject.scriptFormat = 'JavaScript';
+          /*
+          console.log(element.businessObject);
+          console.log(element.businessObject.get('scriptType'))
+          */
+          //console.log($('.bio-properties-panel-entry[data-entry-id="scriptType"] select').val())
+          //$('#bio-properties-panel-scriptType').val('script').trigger();
+          //console.log($('.bio-properties-panel-group').find('[data-group-id="group-CamundaPlatform__Script"]'))
+          //$('.bio-properties-panel-group').find('[data-group-id="group-CamundaPlatform__Script"]').trigger('click')
+        }
+
+        console.log(element.businessObject)
+
+      }
+
       return groups;
     }
   };
