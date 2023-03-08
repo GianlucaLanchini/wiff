@@ -8,7 +8,7 @@ import {
   CamundaPlatformPropertiesProviderModule
 } from 'bpmn-js-properties-panel';
 
-import calledElementProviderModule from './providers/calledElement';
+import customElementsProvider from './providers/customElements';
 import callModdleDescriptor from './descriptors/callActivity';
 
 import CamundaBpmnModdle from 'camunda-bpmn-moddle/resources/camunda.json'
@@ -31,7 +31,10 @@ const presentationMode = url.searchParams.has('pm');
 
 const backURL = 'http://localhost:3000';
 const frontURL = 'http://localhost:8080';
-const diagrams = [];
+
+let idDiagrams = []; 
+let diagrams = [];
+let callActivities = []; 
 
 /*
 jQuery(function() {
@@ -97,7 +100,7 @@ const modeler = new BpmnModeler({
     BpmnPropertiesPanelModule,
     BpmnPropertiesProviderModule,
     CamundaPlatformPropertiesProviderModule,
-    calledElementProviderModule,
+    customElementsProvider,
     AddExporter,
     ExampleModule
   ],
@@ -163,11 +166,11 @@ document.body.addEventListener('dragover', fileDrop('Open BPMN diagram', openFil
 
 async function downloadDiagram() {
   try {
-    scriptControl();
+    //scriptControl();
     const result = await modeler.saveXML({ format: true });
     const { xml } = result;
     download(xml, fileName, 'application/xml');
-    reinstateOldScripts();
+    //reinstateOldScripts();
   } catch (err) {
     console.log(err);
   }
@@ -208,6 +211,15 @@ jQuery(function() {
   } else {
     $('#instanceSection').removeClass('hidden');
   }
+  $.ajax({
+    url: backURL + '/callActivities',
+    type: "GET",
+      success: function(response, status, http) {
+        if (response) {
+            callActivities = response.data;
+        }
+      }
+  });
 })
 
 $('#instanceCheck').on('click', function() {
@@ -253,7 +265,15 @@ $('#diagram-submit').on('click', async function() {
         contentType: "application/json; charset=utf-8",
         success: function(res) {
           if(instanceCheck) {
-            launchInstance(res.data.insertId);
+            idDiagrams.push(res.data.insertId.toString());
+            diagrams.push({
+              "id": res.data.insertId.toString(),
+              "name": diagramName,
+              "xml": xml
+            })
+            launchInstance(res.data.insertId); 
+            idDiagrams = []; 
+            diagrams = []; 
           } else {
             alert(res.message);
             $( "#upload-form" ).dialog('close');
@@ -275,6 +295,9 @@ $('#diagram-submit').on('click', async function() {
 function launchInstance(instanceDiagram) {
   var instanceName = $('#instanceName').val().trim();
   var address = $('#instanceAddress').val().trim();
+  var idCalls = checkForCalls();
+  callsControl(idCalls);
+  var fameDiagrams = diagrams;
   try {
     let ros = new ROSLIB.Ros({ url: address });
     ros.on("connection", () => {
@@ -284,10 +307,12 @@ function launchInstance(instanceDiagram) {
         name: "/fame_dt",
         messageType: "std_msgs/String",
       });
-      var msg = new ROSLIB.Message({
-        data: 'mockup' //da aggiungere
-      });
-      dt_topic.publish(msg);
+      fameDiagrams.forEach(function(diagram) {
+        var msg = new ROSLIB.Message({
+          data: diagram.xml
+        });
+        dt_topic.publish(msg);
+      })
       var instanceData = {
         name_instance: instanceName,
         address_instance: address,
@@ -299,7 +324,7 @@ function launchInstance(instanceDiagram) {
         data: JSON.stringify(instanceData),
         contentType: "application/json; charset=utf-8",
         success: function(res) {
-          window.location.assign(frontURL + '/instances');
+          //window.location.assign(frontURL + '/instances');
         },
         error: function () {
           alert('Error during the upload of the instance');
@@ -331,6 +356,50 @@ function reinstateOldScripts() {
     }
   })
 }
+
+function checkForCalls() {
+  const id = [];
+  elementRegistry.forEach(function(element) {
+    if(element.type && element.type == 'bpmn:CallActivity' && element.businessObject.calledElement !== undefined && element.businessObject.calledElement !== '' && element.businessObject.idDB !== undefined) {
+      id.push(element.businessObject.idDB);
+    }
+  })
+  return id;
+}
+
+function xmlCheckCalls(xml) {
+  var xmlIDCalls = []; 
+  var parser = new DOMParser();  
+  var doc = parser.parseFromString(xml, 'text/xml');
+  var calls = doc.getElementsByTagName("bpmn:callActivity");
+  for(let i = 0; i < calls.length; i++) {
+    var id = calls[i].getAttribute('callActivity:idDB');
+    if(id != null) {
+      xmlIDCalls.push(id);
+    }
+  }
+  callsControl(xmlIDCalls);
+}
+
+function callsControl(idCalls) {
+  idCalls.forEach(function(id) {
+    if(!idDiagrams.includes(id)) {
+      callActivities.forEach(function(callActivity) {
+        if(callActivity.id_diagram.toString() == id) {
+          var xml = callActivity.content_diagram;
+          var name = callActivity.name_diagram;
+          diagrams.push({
+            "id": id,
+            "name": name,
+            "xml": xml
+          })
+          idDiagrams.push(id);
+          xmlCheckCalls(xml);
+        }
+      })
+    }
+  })
+} 
 
 document.body.addEventListener('keydown', function(event) {
   if (event.code === 'KeyS' && (event.metaKey || event.ctrlKey)) {

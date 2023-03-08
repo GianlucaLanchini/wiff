@@ -1,19 +1,20 @@
 {
-  "name": "callElement",
-  "prefix": "CallActivity",
+  "name": "idDB",
+  "prefix": "callActivity",
+  "uri": "http://",
   "xml": {
     "tagAlias": "lowerCase"
   },
   "associations": [],
   "types": [
     {
-      "name": "callElement",
+      "name": "idDB",
       "extends": [
         "bpmn:CallActivity"
       ],
       "properties": [
         {
-          "name": "callElement",
+          "name": "idDB",
           "isAttr": true,
           "type": "String"
         }

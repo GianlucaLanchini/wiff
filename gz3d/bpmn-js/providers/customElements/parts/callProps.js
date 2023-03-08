@@ -25,12 +25,16 @@ function Call(props) {
   const backURL = 'http://localhost:3000';
 
   const getValue = () => {
-    return element.businessObject.calledElement || '';
+    return element.businessObject.idDB + ':' + element.businessObject.calledElement || '';
   }
 
   const setValue = value => {
+    const index = value.indexOf(':');
+    const id = value.substring(0, index);
+    const callValue = value.substring(index + 1);
     return modeling.updateProperties(element, {
-      calledElement: value
+      calledElement: callValue,
+      idDB: id
     });
   }
 

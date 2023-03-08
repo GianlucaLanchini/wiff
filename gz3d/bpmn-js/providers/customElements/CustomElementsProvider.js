@@ -3,6 +3,8 @@
 // update and delete the "spell" property.
 import callProps from './parts/callProps';
 
+//import fameSignalProps from './parts/fameSignalProps';
+
 import { is } from 'bpmn-js/lib/util/ModelUtil';
 
 const LOW_PRIORITY = 500;
@@ -15,7 +17,7 @@ const LOW_PRIORITY = 500;
  * @param {PropertiesPanel} propertiesPanel
  * @param {Function} translate
  */
-export default function CalledElementProvider(propertiesPanel, translate) {
+export default function CustomElementsProvider(propertiesPanel, translate) {
 
   // API ////////
 
@@ -48,6 +50,8 @@ export default function CalledElementProvider(propertiesPanel, translate) {
           entries.splice(1, 1, callProps(element)[0]);
         }
         
+        console.log(element);
+
       }
 
       if(is(element, 'bpmn:ScriptTask')) {
@@ -68,9 +72,19 @@ export default function CalledElementProvider(propertiesPanel, translate) {
           //$('.bio-properties-panel-group').find('[data-group-id="group-CamundaPlatform__Script"]').trigger('click')
         }
 
-        console.log(element.businessObject)
+      }
+
+      /*
+      if(is(element, 'bpmn:StartEvent')) {
+
+        const siganlTab = groups.find((e) => e.id === "signal");
+
+        if(siganlTab !== undefined) {
+          groups.push(createFameSignal(element, translate));
+        }
 
       }
+      */
 
       return groups;
     }
@@ -85,17 +99,19 @@ export default function CalledElementProvider(propertiesPanel, translate) {
   propertiesPanel.registerProvider(LOW_PRIORITY, this);
 }
 
-CalledElementProvider.$inject = [ 'propertiesPanel', 'translate' ];
+CustomElementsProvider.$inject = [ 'propertiesPanel', 'translate' ];
 
+/*
 // Create the custom magic group
-function createCalledGroup(element, translate) {
+function createFameSignal(element, translate) {
 
   // create a group called "Magic properties".
-  const calledGroup = {
-    id: 'calledElement',
-    label: translate('Called element'),
-    entries: callProps(element)
+  const fameGroup = {
+    id: 'fameSignal',
+    label: translate('FaMe'),
+    entries: fameSignalProps(element)
   };
 
-  return calledGroup;
+  return fameGroup;
 }
+*/
