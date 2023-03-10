@@ -132,20 +132,20 @@ then
 
     # Remove temp dir
     rm -rf $TMP_DIR
-    rm -rf $DIR/http/client/assets
-    mv $DIR/http/client/models $DIR/http/client/assets
+    rm -rf $DIR/http/client/viewer/assets
+    mv $DIR/http/client/models $DIR/http/client/viewer/assets
   fi
 
   cd $DIR
 
   echo "Gather all models on the local machine"
 
-  mkdir -p $DIR/http/client/assets
-  ./get_local_models.py $DIR/http/client/assets
-  ./webify_models_v2.py $DIR/http/client/assets
+  mkdir -p $DIR/http/client/viewer/assets
+  ./get_local_models.py $DIR/http/client/viewer/assets
+  ./webify_models_v2.py $DIR/http/client/viewer/assets
 
 else
-  mkdir -p $DIR/http/client/assets
+  mkdir -p $DIR/http/client/viewer/assets
   echo "Not cloning the model repo"
 fi
 
@@ -158,7 +158,7 @@ fi
 # build a local model database
 if [[ $COARSE ]]
 then
-  ./coarse_meshes.sh 50 http/client/assets/
+  ./coarse_meshes.sh 50 http/client/viewer/assets/
 fi
 
 echo "Done"

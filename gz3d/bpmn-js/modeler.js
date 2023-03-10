@@ -10,6 +10,7 @@ import {
 
 import customElementsProvider from './providers/customElements';
 import callModdleDescriptor from './descriptors/callActivity';
+import dataMoodleDescriptor from './descriptors/dataObject';
 
 import CamundaBpmnModdle from 'camunda-bpmn-moddle/resources/camunda.json'
 
@@ -109,7 +110,8 @@ const modeler = new BpmnModeler({
   },
   moddleExtensions: {
     camunda: CamundaBpmnModdle,
-    callActivity: callModdleDescriptor
+    callActivity: callModdleDescriptor,
+    dataObject: dataMoodleDescriptor
   },
   exporter: {
     name: 'bpmn-js-token-simulation',
@@ -194,6 +196,7 @@ $('#InstanceButton').on('click', function(){
 })
 
 $('#upload-button').on('click', function() {
+  console.log(elementRegistry);
   $('#diagramName').val(fileName.substring(0, fileName.length - 5));
   $("#isCallActivity option[value='no']").prop('selected', true);
   $('#instanceCheck').prop('checked', false);
@@ -324,7 +327,7 @@ function launchInstance(instanceDiagram) {
         data: JSON.stringify(instanceData),
         contentType: "application/json; charset=utf-8",
         success: function(res) {
-          //window.location.assign(frontURL + '/instances');
+          window.location.assign(frontURL + '/instances');
         },
         error: function () {
           alert('Error during the upload of the instance');

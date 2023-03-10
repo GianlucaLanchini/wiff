@@ -1,7 +1,7 @@
 {
   "name": "idDB",
   "prefix": "callActivity",
-  "uri": "http://",
+  "uri": "http://call",
   "xml": {
     "tagAlias": "lowerCase"
   },

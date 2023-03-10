@@ -3,9 +3,13 @@
 // update and delete the "spell" property.
 import callProps from './parts/callProps';
 
+import ObjectParametersProps from './parts/objectParametersProps';
+
 //import fameSignalProps from './parts/fameSignalProps';
 
 import { is } from 'bpmn-js/lib/util/ModelUtil';
+
+import { ListGroup } from '@bpmn-io/properties-panel';
 
 const LOW_PRIORITY = 500;
 
@@ -17,7 +21,7 @@ const LOW_PRIORITY = 500;
  * @param {PropertiesPanel} propertiesPanel
  * @param {Function} translate
  */
-export default function CustomElementsProvider(propertiesPanel, translate) {
+export default function CustomElementsProvider(propertiesPanel, injector, translate) {
 
   // API ////////
 
@@ -86,6 +90,10 @@ export default function CustomElementsProvider(propertiesPanel, translate) {
       }
       */
 
+      if(is(element, 'bpmn:DataObjectReference')) {
+        groups.splice(2, 0, createObjectParametersGroup(element, injector, translate));
+      }
+
       return groups;
     }
   };
@@ -99,7 +107,7 @@ export default function CustomElementsProvider(propertiesPanel, translate) {
   propertiesPanel.registerProvider(LOW_PRIORITY, this);
 }
 
-CustomElementsProvider.$inject = [ 'propertiesPanel', 'translate' ];
+CustomElementsProvider.$inject = [ 'propertiesPanel', 'injector', 'translate' ];
 
 /*
 // Create the custom magic group
@@ -115,3 +123,16 @@ function createFameSignal(element, translate) {
   return fameGroup;
 }
 */
+
+function createObjectParametersGroup(element, injector, translate) {
+
+  // Create a group called "parameters".
+  const objectParametersGroup = {
+    id: 'ObjectParameters',
+    label: translate('FaMe'),
+    component: ListGroup,
+    ...ObjectParametersProps({ element, injector })
+  };
+
+  return objectParametersGroup;
+}

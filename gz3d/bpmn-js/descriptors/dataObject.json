@@ -1,0 +1,37 @@
+{
+    "name": "dataObject",
+    "prefix": "dataObject",
+    "uri": "http://data",
+    "xml": {
+      "tagAlias": "lowerCase"
+    },
+    "associations": [],
+    "types": [
+      {
+        "name": "Parameters",
+        "superClass": [ "Element" ],
+        "properties": [
+          {
+            "name": "values",
+            "isMany": true,
+            "type": "Parameter"
+          }
+        ]
+      },
+      {
+        "name": "Parameter",
+        "properties": [
+          {
+            "name": "name",
+            "isAttr": true,
+            "type": "String"
+          },
+          {
+            "name": "value",
+            "isAttr": true,
+            "type": "String"
+          }
+        ]
+      }
+    ]
+}

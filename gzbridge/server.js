@@ -123,7 +123,7 @@ wsServer.on('request', function(request) {
 
     if (gzNode.getIsGzServerConnected()) {
 
-      gzNode.loadMaterialScripts(staticBasePath + '/assets');
+      gzNode.loadMaterialScripts(staticBasePath + '/viewer/assets');
       gzNode.setPoseMsgFilterMinimumAge(0.02);
       gzNode.setPoseMsgFilterMinimumDistanceSquared(0.00001);
       gzNode.setPoseMsgFilterMinimumQuaternionSquared(0.00001);
