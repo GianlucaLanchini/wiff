@@ -123,6 +123,7 @@ const modeler = new BpmnModeler({
 });
 
 const elementRegistry = modeler.get('elementRegistry');
+const commandStack = modeler.get('commandStack');
 
 function openDiagram(diagram) {
   return modeler.importXML(diagram)
@@ -168,6 +169,7 @@ document.body.addEventListener('dragover', fileDrop('Open BPMN diagram', openFil
 
 async function downloadDiagram() {
   try {
+    dataObjectControl();
     //scriptControl();
     const result = await modeler.saveXML({ format: true });
     const { xml } = result;
@@ -196,7 +198,6 @@ $('#InstanceButton').on('click', function(){
 })
 
 $('#upload-button').on('click', function() {
-  console.log(elementRegistry);
   $('#diagramName').val(fileName.substring(0, fileName.length - 5));
   $("#isCallActivity option[value='no']").prop('selected', true);
   $('#instanceCheck').prop('checked', false);
@@ -253,6 +254,7 @@ $('#diagram-submit').on('click', async function() {
       isCall = 0;
     }
     try {
+      dataObjectControl();
       scriptControl();
       const result = await modeler.saveXML({ format: true });
       const { xml } = result;
@@ -341,6 +343,29 @@ function launchInstance(instanceDiagram) {
     alert('Error during the connection to rosbridge');
   }
 }
+
+
+function dataObjectControl() {
+  elementRegistry.forEach(function(element) {
+    if(element.type && element.type == 'bpmn:DataObjectReference' && element.businessObject.extensionElements) {
+      element.businessObject.extensionElements.values.forEach(function(parameters) {
+        if(parameters.$type == 'dataObject:Parameters') {
+          parameters.values.forEach(function(parameter) {
+            if(parameter.value == undefined || parameter.value.trim() == '') {
+              commandStack.execute('element.updateModdleProperties', {
+                element,
+                moddleElement: parameter,
+                properties: {
+                  value: ''
+                }
+              });
+            }
+          })
+        }
+      })
+    }
+  })
+} 
 
 function scriptControl() {
   elementRegistry.forEach(function(element) {

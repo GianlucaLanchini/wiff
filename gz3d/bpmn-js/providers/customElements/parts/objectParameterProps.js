@@ -26,7 +26,7 @@ export default function ObjectParameterProps(props) {
     }
   ];
 
-  if(parameter.value.trim() != '') {
+  if(typeof parameter.value == 'undefined' || parameter.value != '') {
     entries.push({
       id: idPrefix + '-value',
       component: Value,
@@ -85,13 +85,15 @@ function Value(props) {
   const debounce = useService('debounceInput');
 
   const setValue = (value) => {
-    commandStack.execute('element.updateModdleProperties', {
-      element,
-      moddleElement: parameter,
-      properties: {
-        value: value
-      }
-    });
+    if(value) {
+      commandStack.execute('element.updateModdleProperties', {
+        element,
+        moddleElement: parameter,
+        properties: {
+          value: value
+        }
+      });
+    }
   };
 
   const getValue = (parameter) => {
@@ -124,7 +126,7 @@ function IsOutput(props) {
           element,
           moddleElement: parameter,
           properties: {
-            value: 'var_value'
+            value: undefined
           }
         });
       } else {
@@ -139,7 +141,7 @@ function IsOutput(props) {
     };
   
     const getValue = () => {
-      if(parameter.value.trim() != '') {
+      if(parameter.value != '') {
         return true;
       } 
       return false;
