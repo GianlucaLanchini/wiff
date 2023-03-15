@@ -11,6 +11,8 @@ import {
 import customElementsProvider from './providers/customElements';
 import callModdleDescriptor from './descriptors/callActivity';
 import dataMoodleDescriptor from './descriptors/dataObject';
+import signalMoodleDescriptor from './descriptors/signalEvent';
+import signalDataMoodleDescriptor from './descriptors/signalData';
 
 import CamundaBpmnModdle from 'camunda-bpmn-moddle/resources/camunda.json'
 
@@ -111,7 +113,9 @@ const modeler = new BpmnModeler({
   moddleExtensions: {
     camunda: CamundaBpmnModdle,
     callActivity: callModdleDescriptor,
-    dataObject: dataMoodleDescriptor
+    dataObject: dataMoodleDescriptor,
+    signalEvent: signalMoodleDescriptor,
+    signalData: signalDataMoodleDescriptor
   },
   exporter: {
     name: 'bpmn-js-token-simulation',

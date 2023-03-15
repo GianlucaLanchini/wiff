@@ -1,11 +1,8 @@
-// Import your custom property entries.
-// The entry is a text input field with logic attached to create,
-// update and delete the "spell" property.
 import callProps from './parts/callProps';
 
 import ObjectParametersProps from './parts/objectParametersProps';
 
-//import fameSignalProps from './parts/fameSignalProps';
+import fameSignalProps from './parts/fameSignalProps';
 
 import { is } from 'bpmn-js/lib/util/ModelUtil';
 
@@ -53,8 +50,6 @@ export default function CustomElementsProvider(propertiesPanel, injector, transl
         if (element.businessObject.get('calledElement') !== undefined) {
           entries.splice(1, 1, callProps(element)[0]);
         }
-        
-        console.log(element);
 
       }
 
@@ -78,21 +73,21 @@ export default function CustomElementsProvider(propertiesPanel, injector, transl
 
       }
 
-      /*
-      if(is(element, 'bpmn:StartEvent')) {
+      if(is(element, 'bpmn:StartEvent') || is(element, 'bpmn:EndEvent') || is(element, 'bpmn:IntermediateCatchEvent') || is(element, 'bpmn:IntermediateThrowEvent')) {
 
         const siganlTab = groups.find((e) => e.id === "signal");
 
         if(siganlTab !== undefined) {
-          groups.push(createFameSignal(element, translate));
+          groups.splice(3, 0, createFameSignal(element, translate));
         }
 
       }
-      */
 
       if(is(element, 'bpmn:DataObjectReference')) {
         groups.splice(2, 0, createObjectParametersGroup(element, injector, translate));
       }
+
+      console.log(element)
 
       return groups;
     }
@@ -109,11 +104,8 @@ export default function CustomElementsProvider(propertiesPanel, injector, transl
 
 CustomElementsProvider.$inject = [ 'propertiesPanel', 'injector', 'translate' ];
 
-/*
-// Create the custom magic group
 function createFameSignal(element, translate) {
 
-  // create a group called "Magic properties".
   const fameGroup = {
     id: 'fameSignal',
     label: translate('FaMe'),
@@ -122,11 +114,9 @@ function createFameSignal(element, translate) {
 
   return fameGroup;
 }
-*/
 
 function createObjectParametersGroup(element, injector, translate) {
 
-  // Create a group called "parameters".
   const objectParametersGroup = {
     id: 'ObjectParameters',
     label: translate('FaMe'),

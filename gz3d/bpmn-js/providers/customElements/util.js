@@ -7,8 +7,18 @@ export function getParametersExtension(element) {
   return getExtension(businessObject, 'dataObject:Parameters');
 }
 
+export function getSignalParametersExtension(element) {
+  const businessObject = getBusinessObject(element);
+  return getExtension(businessObject, 'signalData:Parameters');
+}
+
 export function getParameters(element) {
   const parameters = getParametersExtension(element);
+  return parameters && parameters.get('values');
+}
+
+export function getSignalParameters(element) {
+  const parameters = getSignalParametersExtension(element);
   return parameters && parameters.get('values');
 }
 
@@ -36,6 +46,9 @@ export function createParameters(properties, parent, bpmnFactory) {
   return createElement('dataObject:Parameters', properties, parent, bpmnFactory);
 }
 
+export function createSignalParameters(properties, parent, bpmnFactory) {
+  return createElement('signalData:Parameters', properties, parent, bpmnFactory);
+}
 
 export function nextId(prefix) {
   const ids = new Ids([ 32,32,1 ]);

@@ -1,0 +1,37 @@
+{
+    "name": "signalData",
+    "prefix": "signalData",
+    "uri": "http://signalData",
+    "xml": {
+      "tagAlias": "lowerCase"
+    },
+    "associations": [],
+    "types": [
+      {
+        "name": "Parameters",
+        "superClass": [ "Element" ],
+        "properties": [
+          {
+            "name": "values",
+            "isMany": true,
+            "type": "Parameter"
+          }
+        ]
+      },
+      {
+        "name": "Parameter",
+        "properties": [
+          {
+            "name": "name",
+            "isAttr": true,
+            "type": "String"
+          },
+          {
+            "name": "value",
+            "isAttr": true,
+            "type": "String"
+          }
+        ]
+      }
+    ]
+}

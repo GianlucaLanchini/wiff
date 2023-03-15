@@ -11,11 +11,13 @@ const path = require('path');
 const gzbridge = require('./build/Debug/gzbridge');
 const diagram = require('./express/diagram');
 const instance = require('./express/instance');
+const message = require('./express/messages')
 
 const app = express();
 app.use(cors());
 app.use('/', diagram);
 app.use('/', instance);
+app.use('/', message);
 
 /**
  * Path from where the static site is served

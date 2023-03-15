@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `fame_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `fame_db`;
--- MySQL dump 10.13  Distrib 8.0.28, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.29, for Linux (x86_64)
 --
--- Host: 127.0.0.1    Database: fame_db
+-- Host: localhost    Database: fame_db
 -- ------------------------------------------------------
--- Server version	8.0.28
+-- Server version	8.0.32-0ubuntu0.22.04.2
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -70,6 +70,33 @@ LOCK TABLES `instances` WRITE;
 /*!40000 ALTER TABLE `instances` DISABLE KEYS */;
 /*!40000 ALTER TABLE `instances` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `msgs`
+--
+
+DROP TABLE IF EXISTS `msgs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `msgs` (
+  `id_msgs` int NOT NULL AUTO_INCREMENT,
+  `name_msgs` varchar(45) NOT NULL,
+  `cat_msgs` varchar(45) NOT NULL,
+  `payload_msgs` longtext NOT NULL,
+  PRIMARY KEY (`id_msgs`),
+  UNIQUE KEY `id_msgs_UNIQUE` (`id_msgs`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `msgs`
+--
+
+LOCK TABLES `msgs` WRITE;
+/*!40000 ALTER TABLE `msgs` DISABLE KEYS */;
+INSERT INTO `msgs` VALUES (1,'Float64','std_msgs','{\"data\":\"float64\"}'),(2,'Float32','std_msgs','{\"data\":\"float32\"}'),(3,'Int16','std_msgs','{\"data\":\"int16\"}'),(4,'String','std_msgs','{\"data\":\"string\"}'),(5,'Bool','std_msgs','{\"data\":\"bool\"}'),(6,'ColorRGBA','std_msgs','{\"r\":\"id_msgs:2\",\"g\":\"id_msgs:2\",\"b\":\"id_msgs:2\",\"a\":\"id_msgs:2\"}'),(7,'UInt32','std_msgs','{\"data\":\"uint32\"}'),(8,'Time','std_msgs','{\"data\":\"time\"}'),(9,'Header','std_msgs','{\"seq\":\"id_msgs:7\",\"stamp\":\"id_msgs:8\",\"frame_id\":\"id_msgs:4\"}'),(10,'Vector3','geometry_msgs','{\"x\":\"id_msgs:1\",\"y\":\"id_msgs:1\",\"z\":\"id_msgs:1\"}'),(11,'Vector3Stamped','geometry_msgs','{\"header\":\"id_msgs:9\",\"vector\":\"id_msgs:10\"}'),(12,'Point','geometry_msgs','{\"x\":\"id_msgs:1\",\"y\":\"id_msgs:1\",\"z\":\"id_msgs:1\"}'),(13,'Quaternion','geometry_msgs','{\"x\":\"id_msgs:1\",\"y\":\"id_msgs:1\",\"z\":\"id_msgs:1\",\"w\":\"id_msgs:1\"}'),(14,'Pose','geometry_msgs','{\"position\":\"id_msgs:12\",\"orientation\":\"id_msgs:13\"}'),(15,'Twist','geometry_msgs','{\"linear\":\"id_msgs:10\",\"angular\":\"id_msgs:10\"}'),(16,'Wrench','geometry_msgs','{\"force\":\"id_msgs:10\",\"torque\":\"id_msgs:10\"}');
+/*!40000 ALTER TABLE `msgs` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -80,4 +107,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-13 10:34:07
+-- Dump completed on 2023-03-15 23:59:24

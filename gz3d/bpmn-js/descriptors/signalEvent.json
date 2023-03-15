@@ -1,0 +1,29 @@
+{
+    "name": "siganlEvent",
+    "prefix": "FaMe",
+    "uri": "http://signal",
+    "xml": {
+        "tagAlias": "lowerCase"
+    },
+    "associations": [],
+    "types": [
+        {
+        "name": "FaMe",
+        "extends": [
+            "bpmn:SignalEventDefinition"
+        ],
+        "properties": [
+            {
+              "name": "message_type",
+              "isAttr": true,
+              "type": "String"
+            },
+            {
+              "name": "message_payload",
+              "isAttr": true,
+              "type": "String"
+            }
+        ]
+        }
+    ]
+}
