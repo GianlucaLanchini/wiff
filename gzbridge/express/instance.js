@@ -62,4 +62,23 @@ app.post('/instances', (req,res) => {
     }) 
 })
 
+app.delete('/instances/:id', (req,res) => {
+    let ID = req.params.id;
+    db.query('delete from instances where id_instance = ?', [ID], (err,result) => {
+        if(err){
+            console.log('Error');
+        }
+        if(result){
+            res.send({
+                message: "Removed Instance",
+                data: result
+            })
+        } else {
+            res.send({
+                message:"Nothing was deleted" 
+            }) 
+        }
+    });
+})
+
 module.exports = app;

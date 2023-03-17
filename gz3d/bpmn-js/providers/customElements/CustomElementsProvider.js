@@ -78,6 +78,13 @@ export default function CustomElementsProvider(propertiesPanel, injector, transl
         const siganlTab = groups.find((e) => e.id === "signal");
 
         if(siganlTab !== undefined) {
+          if(element.businessObject.eventDefinitions[0].signalRef) {
+            element.businessObject.name = element.businessObject.eventDefinitions[0].signalRef.name;
+            if(typeof element.label != 'undefined') {
+              element.label.businessObject.name =  element.businessObject.eventDefinitions[0].signalRef.name;
+              $(`.djs-element[data-element-id="${element.label.id}"] tspan`).text(element.businessObject.eventDefinitions[0].signalRef.name);
+            }
+          }
           groups.splice(3, 0, createFameSignal(element, translate));
         }
 

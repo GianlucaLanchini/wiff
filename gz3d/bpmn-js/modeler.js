@@ -184,6 +184,7 @@ async function downloadDiagram() {
   }
 }
 
+/*
 $('#navigation').on({
   mouseenter: function () {
     $('#navigation').addClass('navigationTransition');
@@ -192,6 +193,7 @@ $('#navigation').on({
     $('#navigation').removeClass('navigationTransition');
   }
 });
+*/
 
 $('#modelerButton').on('click', function(){
   window.location.assign(frontURL);

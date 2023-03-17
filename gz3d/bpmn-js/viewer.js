@@ -109,6 +109,19 @@ jQuery(function() {
                 fame.deanimateTask(json.id)
                 break;
               }
+              case 'end':{
+                $.ajax({
+                  url: backURL + '/instances/' + localStorage['instance-id'],
+                  type: "DELETE",
+                    success: function(response, status, http) {
+                      if (response) {
+                        if(response.message == "Removed Instance") {
+                          alert("The instance has concluded its execution");
+                        }
+                      }
+                    }
+                })
+              }
               default :{
                 fame.animateSequenceFlow(json.id, json.instance);
                 break;

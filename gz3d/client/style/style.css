@@ -178,8 +178,6 @@ body:not(.presentation-mode) .bts-notifications {
 }
 
 #navigation{
-  top: -60px;
-  padding: 5px;
   position: absolute;
   margin-left: auto;
   margin-right: auto;
@@ -191,22 +189,20 @@ body:not(.presentation-mode) .bts-notifications {
   z-index: 100;
   border: 1px;
   border-color: #000;
-  transition: 0.3s;
-  padding-bottom: 60px;
-  max-width: 250px;
+  max-width: 220px;
+  top: 0;
+  min-height: 60px;
+  background-color: hsl(225, 10%, 90%);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 #navigation button {
   height: 50px;
   width: 100px;
-  z-index: 200;
   cursor:pointer;
-}
-
-.navigationTransition {
-  padding-bottom: 0px!important;
-  transform: translate(0px, 60px);
-  transition: 0.3s;
+  position: relative;
+  top: 5px;
 }
 
 .bio-properties-panel-entry[data-entry-id="scriptValue"] .bio-properties-panel-input[name="scriptValue"] {
