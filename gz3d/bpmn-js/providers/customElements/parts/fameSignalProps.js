@@ -98,12 +98,21 @@ export default function(element) {
             }  
           }
         } else {
-          entries.push({
-            id: name,
-            element,
-            component: FameSignalMessage,
-            isEdited: isTextFieldEntryEdited
-          });
+          if(name == '') {
+            entries.push({
+              id: x,
+              element,
+              component: FameSignalMessage,
+              isEdited: isTextFieldEntryEdited
+            });
+          } else {
+            entries.push({
+              id: name,
+              element,
+              component: FameSignalMessage,
+              isEdited: isTextFieldEntryEdited
+            });
+          } 
         }
       }
     }

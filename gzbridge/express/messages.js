@@ -51,16 +51,16 @@ app.get('/messages/:id', (req,res)=>{
 })
 
 app.post('/messages', (req,res) => {
-    let messageName = req.body.name_message;
-    let messageCategory = req.body.category_message;
-    let messagePayload = JSON.stringify(req.body.payload_message);
+    let messageName = req.body.name_msgs;
+    let messageCategory = req.body.cat_msgs;
+    let messagePayload = JSON.stringify(req.body.payload_msgs);
     db.query('insert into msgs(name_msgs, cat_msgs, payload_msgs) values(?,?,?)', [messageName, messageCategory, messagePayload], (err, result) => {
         if(err){
             console.log('Error');
         }
         if(result){
             res.send({
-                message: "Added message",
+                message: "Added message type",
                 data: result
             })
         } 

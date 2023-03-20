@@ -22,6 +22,8 @@ import fileOpen from 'file-open';
 
 import download from 'downloadjs';
 
+import { domify } from 'min-dom';
+
 import fameSimulation from '../resources/simple_scenario.bpmn';
 
 import rosbridge from './rosbridge';
@@ -204,6 +206,9 @@ $('#InstanceButton').on('click', function(){
 })
 
 $('#upload-button').on('click', function() {
+  if($('#msg-upload-form.ui-dialog-content.ui-widget-content').length > 0) {
+    $('#msg-upload-form').dialog('close');
+  }
   $('#diagramName').val(fileName.substring(0, fileName.length - 5));
   $("#isCallActivity option[value='no']").prop('selected', true);
   $('#instanceCheck').prop('checked', false);
@@ -213,6 +218,89 @@ $('#upload-button').on('click', function() {
   $('#instanceName').val($('#diagramName').val());
   $('#instanceAddress').val('');
   $('#upload-form').dialog();
+});
+
+$('#msg-button').on('click', function() {
+  if($('#upload-form.ui-dialog-content.ui-widget-content').length > 0) {
+    $('#upload-form').dialog('close');
+  }
+  $("#payloadNumber option[value='1']").prop('selected', true);
+  populateFields(1);
+  $('#typeName').val('');
+  $('#typeCategory').val('');
+  $('#payload1Name').val('');
+  $('#msg-upload-form').dialog({
+    maxWidth: 400,
+    maxHeight: 330,
+    width: 400,
+    height: 330
+  });
+});
+
+$('#payloadNumber').on('change', function() {
+  populateFields(this.value);
+})
+
+function populateFields(num) {
+  $('#payloadSection').empty();
+  for(let i = 1; i <= num; i++) {
+    var child = domify(`
+        <div data-index="${i}">
+          <label for="payload${i}Name">Payload Name: </label>
+          <input type="text" name="payload${i}Name" id="payload${i}Name" class="text">
+        </div>
+        <br>
+    `);
+    document.getElementById('payloadSection').appendChild(child);
+  }
+}
+
+$('#type-submit').on('click', async function() {
+  var emptyCheck = false;
+  var equalCheck = false;
+  var payloadNum = parseInt($('#payloadNumber').val());
+  var payload = [];  
+  if($('#typeName').val().trim() == '' || $('#typeCategory').val().trim() == '') {
+    emptyCheck = true;
+  } else {
+    for(let i = 1; i <= payloadNum; i++) {
+      let payloadName = $(`#payload${i}Name`).val().trim();
+      if(payloadName == '') {
+        emptyCheck = true;
+      } else if(payload.includes(payloadName)) {
+        equalCheck = true;
+      }
+      payload.push(payloadName);
+    } 
+  }
+  if(emptyCheck) {
+    alert('Please do not leave any field empty');
+  } else if(equalCheck) {
+    alert('No payload name can be the same');
+  } else {
+    let payloadData = {};
+    payload.forEach(function(field) {
+      payloadData[`${field}`] = 'string';
+    })
+    var data = {
+      name_msgs: $('#typeName').val().trim(),
+      cat_msgs: $('#typeCategory').val().trim(),
+      payload_msgs: payloadData
+    };
+    $.ajax({
+      type: 'post',
+      url: backURL + '/messages',
+      dataType: 'json',
+      contentType: 'application/json',
+      data: JSON.stringify(data),
+      success: function(res) {
+        alert(res.message);
+      },  
+      error: function () {
+        alert('Error during the upload of the new type');
+      }
+    });
+  }
 });
 
 jQuery(function() {

@@ -37,6 +37,7 @@
   <div class="links bottom-links">
     <button class="link" id="download-button">Download Diagram</button>
     <button class="link" id="upload-button">Upload Diagram</button>
+    <button class="link" id="msg-button">Add ROS Message Type</button>
   </div>
 
   <div id="upload-form" title="Upload the diagram to the Database">
@@ -60,6 +61,38 @@
     </div>
     <br><br>
     <button id="diagram-submit">Submit</button>
+  </div>
+
+  <div id="msg-upload-form" title="Add a new ROS message type">
+    <label for="typeName">Type Name: </label>
+    <input type="text" name="typeName" id="typeName" class="text">
+    <br><br>
+    <label for="typeCategory">Type Categry: </label>
+    <input type="text" name="typeCategory" id="typeCategory" class="text">
+    <br><br><br>
+    <label for="payloadNumber">How many fields for the type payload? </label>
+    <select name="payloadNumber" id="payloadNumber">
+      <option value="1" selected="selected">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+    </select>
+    <br><br>
+    <div id="payloadSection">
+      <div data-index="1">
+        <label for="payload1Name">Payload Name: </label>
+        <input type="text" name="payload1Name" id="payload1Name" class="text">
+      </div>
+      <br>
+    </div>
+    <br><br>
+    <button id="type-submit">Submit</button>
   </div>
 
   <script src="./dist/modeler.js"></script>
