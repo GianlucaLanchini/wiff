@@ -176,11 +176,11 @@ document.body.addEventListener('dragover', fileDrop('Open BPMN diagram', openFil
 async function downloadDiagram() {
   try {
     dataObjectControl();
-    //scriptControl();
+    scriptControl();
     const result = await modeler.saveXML({ format: true });
     const { xml } = result;
     download(xml, fileName, 'application/xml');
-    //reinstateOldScripts();
+    reinstateOldScripts();
   } catch (err) {
     console.log(err);
   }
